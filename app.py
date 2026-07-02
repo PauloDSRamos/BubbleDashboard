@@ -6,7 +6,7 @@ import statsmodels.api as sm
 
 import streamlit as st
 import plotly.express as px
-from datetime import datetime
+from datetime import datetime, timedelta
 from streamlit_extras.metric_cards import style_metric_cards
 from streamlit_extras.grid import grid
 import altair as alt
@@ -16,8 +16,11 @@ def build_sidebar():
     ticker_list = pd.read_csv("list.csv", index_col=0)
     ticker = st.selectbox(label="Select cryptocurrency", options=ticker_list, placeholder='Tickers')
 
-    start_date = st.date_input("From", format="DD/MM/YYYY", value=datetime(2025,1,2))
-    end_date = st.date_input("Until", format="DD/MM/YYYY", value="today")
+    today = datetime.today()
+    one_month_ago = today - timedelta(days=30)
+
+    start_date = st.date_input("From", format="DD/MM/YYYY", value=one_month_ago)
+    end_date = st.date_input("Until", format="DD/MM/YYYY", value=today)
 
     if ticker:
         prices = yf.download(ticker, start=start_date, end=end_date)['Close']
